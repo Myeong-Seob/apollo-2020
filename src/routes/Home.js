@@ -3,30 +3,6 @@ import { useQuery, gql } from "@apollo/client";
 import Movie from "../components/Movie";
 import styled from "styled-components";
 
-const GET_MOVIES = gql`
-  query {
-    movies(limit: 40, rating: 8.8) {
-      id
-      medium_cover_image
-    }
-  }
-`;
-
-// function ExchangeRates() {
-//   const { loading, error, data } = useQuery(EXCHANGE_RATES);
-
-//   if (loading) return <p>Loading...</p>;
-//   if (error) return <p>Error :(</p>;
-
-//   return data.rates.map(({ currency, rate }) => (
-//     <div key={currency}>
-//       <p>
-//         {currency}: {rate}
-//       </p>
-//     </div>
-//   ));
-// }
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -57,6 +33,16 @@ const Loading = styled.div`
   font-weight: 500;
   margin-top: 10px;
 `;
+
+const GET_MOVIES = gql`
+  query {
+    movies(limit: 40, rating: 8.8) {
+      id
+      medium_cover_image
+    }
+  }
+`;
+
 export default () => {
   const { loading, data } = useQuery(GET_MOVIES);
   return (
