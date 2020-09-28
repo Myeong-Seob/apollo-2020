@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
 import Movie from "../components/Movie";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const Container = styled.div`
   display: flex;
@@ -28,10 +28,47 @@ const Subtitle = styled.h3`
   font-size: 35px;
 `;
 const Loading = styled.div`
-  font-size: 18px;
-  opacity: 0.5;
-  font-weight: 500;
-  margin-top: 10px;
+  position: relative;
+  margin-top: 100px;
+  width: 200px;
+  height: 200px;
+  border: 4px solid #f1f1f1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: -10px -10px 15px rgba(255, 255, 255, 1),
+    10px 10px 15px rgba(0, 0, 0, 0.1),
+    inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(0, 0, 0, 0.1);
+`;
+const LoadingBefore = styled.span`
+  position: absolute;
+  top: 25px;
+  bottom: 25px;
+  right: 25px;
+  left: 25px;
+  background: #f1f1f1;
+  border-radius: 50%;
+  border: 4px solid #f1f1f1;
+  box-shadow: inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(0, 0, 0, 0.1);
+`;
+const Circle = keyframes`
+   from {
+     transform: rotate(0deg);
+   }
+   to{
+     transform: rotate(360deg);
+   }
+ `;
+const Load = styled.span`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(#14ffe9, #ffeb3b, #ff00e0);
+  z-index: -1;
+  filter: blur(20px);
+  animation: ${Circle} 0.5s linear infinite;
 `;
 
 const GET_MOVIES = gql`
@@ -52,7 +89,13 @@ export default () => {
         <Subtitle>I Love GraphQL</Subtitle>
       </Header>
       {loading ? (
-        <Loading>Loading...</Loading>
+        <Loading>
+          <LoadingBefore></LoadingBefore>
+          <Load></Load>
+          <Load></Load>
+          <Load></Load>
+          <Load></Load>
+        </Loading>
       ) : (
         data.movies.map((movie) => <Movie key={movie.id} id={movie.id} />)
       )}
