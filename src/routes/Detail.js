@@ -1,7 +1,8 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import styled, { keyframes } from "styled-components";
+import Suggestion from "../components/Suggestion";
 
 const Loading = styled.div`
   position: relative;
@@ -48,12 +49,13 @@ const Load = styled.span`
 `;
 
 const Container = styled.div`
-  height: 100vh;
+  height: 90%;
   width: 100%;
   max-width: 1200px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-flow: row wrap;
   margin: auto;
   overflow: hidden;
 `;
@@ -68,7 +70,7 @@ const Detail = styled.div`
   border-radius: 10px;
 `;
 const Description = styled.div`
-  margin-left: 15px;
+  margin-left: 30px;
   display: flex;
   flex-flow: column wrap;
 `;
@@ -90,6 +92,45 @@ const Genres = styled.span`
 `;
 const Summary = styled.span`
   font-size: 18px;
+  width: 80%;
+`;
+const Text = styled.div`
+  font-weight: bold;
+  font-size: 2em;
+  margin: 15px 0;
+`;
+const Div = styled.div`
+  height: 100vh;
+`;
+
+const Anohter = styled.div`
+  display: flex;
+  width: 100%;
+  box-shadow: -10px -10px 15px rgba(255, 255, 255, 1),
+    10px 10px 15px rgba(0, 0, 0, 0.1),
+    inset -10px -10px 15px rgba(255, 255, 255, 0.5),
+    inset 10px 10px 15px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  flex-flow: wrap column;
+  justify-content: center;
+  align-items: center;
+`;
+const SugMovies = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-content: center;
+`;
+const Home = styled.div`
+  width: 100%;
+  height: 10%;
+  background-image: linear-gradient(-45deg, #d754ab, #fd723a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3.5em;
 `;
 
 const GET_MOVIE = gql`
@@ -101,6 +142,11 @@ const GET_MOVIE = gql`
       medium_cover_image
       description_intro
     }
+    suggestions(id: $id) {
+      id
+      title
+      medium_cover_image
+    }
   }
 `;
 
@@ -110,49 +156,51 @@ export default () => {
     variables: { id: parseInt(id) },
   });
   return (
-    <Container>
-      {loading ? (
-        <Loading>
-          <LoadingBefore></LoadingBefore>
-          <Load></Load>
-          <Load></Load>
-          <Load></Load>
-          <Load></Load>
-        </Loading>
-      ) : (
-        <Detail>
-          <img alt={data.movie.title} src={data.movie.medium_cover_image} />
-          <Description>
-            <Title>{data.movie.title}</Title>
-            <Rating>
-              <Star>⭑</Star>
-              {data.movie.rating}
-            </Rating>
-            <Genres>{data.movie.genres}</Genres>
-            <Summary>{data.movie.description_intro}</Summary>
-          </Description>
-        </Detail>
-      )}
-    </Container>
+    <Div>
+      <Home>
+        <Link to={"/"} style={{ textDecoration: "none", color: "white" }}>
+          Apllo Movie
+        </Link>
+      </Home>
+      <Container>
+        {loading ? (
+          <Loading>
+            <LoadingBefore></LoadingBefore>
+            <Load></Load>
+            <Load></Load>
+            <Load></Load>
+            <Load></Load>
+          </Loading>
+        ) : (
+          <>
+            <Detail>
+              <img alt={data.movie.title} src={data.movie.medium_cover_image} />
+              <Description>
+                <Title>{data.movie.title}</Title>
+                <Rating>
+                  <Star>⭑</Star>
+                  {data.movie.rating}
+                </Rating>
+                <Genres>{data.movie.genres}</Genres>
+                <Summary>{data.movie.description_intro}</Summary>
+              </Description>
+            </Detail>
+            <Anohter>
+              <Text>SUGGESTIONS</Text>
+              <SugMovies>
+                {data.suggestions.map((m) => (
+                  <Suggestion
+                    key={m.id}
+                    id={m.id}
+                    bg={m.medium_cover_image}
+                    title={m.title}
+                  />
+                ))}
+              </SugMovies>
+            </Anohter>
+          </>
+        )}
+      </Container>
+    </Div>
   );
 };
-
-// if (loading) {
-//   return (
-//     <Loading>
-//       <LoadingBefore></LoadingBefore>
-//       <Load></Load>
-//       <Load></Load>
-//       <Load></Load>
-//       <Load></Load>
-//     </Loading>
-//   );
-// }
-// if (data && data.movie) {
-//   return (
-//     <>
-//       <p>{data.movie.title}</p>
-//       <img alt={data.movie.title} src={data.movie.medium_cover_image} />
-//     </>
-//   );
-// }

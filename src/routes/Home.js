@@ -90,7 +90,7 @@ const MovieContainer = styled.div`
 
 const GET_MOVIES = gql`
   query {
-    movies(limit: 30) {
+    movies(limit: 50, rating: 8.8) {
       id
       title
       medium_cover_image
