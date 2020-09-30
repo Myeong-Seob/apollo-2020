@@ -70,11 +70,29 @@ const Load = styled.span`
   filter: blur(20px);
   animation: ${Circle} 0.5s linear infinite;
 `;
+const Movies = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 50px;
+  margin: auto;
+`;
+
+const MovieContainer = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+`;
 
 const GET_MOVIES = gql`
   query {
-    movies(limit: 40, rating: 8.8) {
+    movies(limit: 30) {
       id
+      title
       medium_cover_image
     }
   }
@@ -97,7 +115,18 @@ export default () => {
           <Load></Load>
         </Loading>
       ) : (
-        data.movies.map((movie) => <Movie key={movie.id} id={movie.id} />)
+        <MovieContainer>
+          <Movies>
+            {data.movies.map((movie) => (
+              <Movie
+                key={movie.id}
+                id={movie.id}
+                title={movie.title}
+                bg={movie.medium_cover_image}
+              />
+            ))}
+          </Movies>
+        </MovieContainer>
       )}
     </Container>
   );
